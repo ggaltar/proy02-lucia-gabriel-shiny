@@ -57,7 +57,7 @@ lista_zonas <- c("Todas", lista_zonas)
 # Definición del objeto ui
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Daños en la red vial nacional"),
+  dashboardHeader(title = "Daños en la RVN"),
   dashboardSidebar(sidebarMenu(
     menuItem(
       text = "Filtros",
@@ -223,7 +223,7 @@ server <- function(input, output, session) {
       st_drop_geometry() %>%
      
       datatable(rownames = FALSE,
-                colnames = c('Estructura','Elemento', 'Tipo', 'Severidad'),
+                colnames = c('Estructura','Elemento', 'Tipo', 'Severidad','Fecha', 'Zona'),
                 filter = 'top',
                 options = list(
                   language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
