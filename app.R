@@ -8,6 +8,8 @@ library(DT)
 library(plotly)
 library(ggplot2)
 library(leaflet)
+library(leaflet.extras)
+library(leafem)
 library(shiny)
 library(shinydashboard)
 
@@ -100,12 +102,12 @@ ui <- dashboardPage(
     box(
       title = "Mapa de ubicación de daños",
       leafletOutput(outputId = "mapa"),
-      width = 8
+      width = 7
     ),
     box(
       title = "Principales elementos dañados",
       plotOutput(outputId = "grafico"),
-      width = 4
+      width = 5
     ),
     fluidRow(
       box(
@@ -207,12 +209,14 @@ server <- function(input, output, session) {
         )
       )  %>%
       addLayersControl(
-        "bottomleft",
         baseGroups = c("Nat Geo", "OSM", "CartoDB"),
         overlayGroups = c("Daños", "Zonas de conservación","Zonas por cantidad"),
-        options = layersControlOptions(collapsed = FALSE)
+        options = layersControlOptions(collapsed = T)
       ) %>%
-      hideGroup("Zonas por cantidad")
+      hideGroup("Zonas por cantidad") %>%
+      addSearchOSM() %>%
+      addResetMapButton() %>%
+      addMouseCoordinates()
   })
   
   # Tabla de registro de daños
@@ -233,6 +237,8 @@ server <- function(input, output, session) {
   
   # Gráfico de principales elementos dañados
   
+  lista_colores <- c("#001219","#005f73","#0a9396","#94d2bd","#94d2bd","#ee9b00","#ca6702","#bb3e03","#ae2012","#9b2226","#ef476f","#ffd166","#06d6a0","#118ab2","#073b4c","#495057")
+  
   output$grafico <- renderPlot({
     # Preparación de los datos
     registros <- filtrarDanos()
@@ -242,12 +248,11 @@ server <- function(input, output, session) {
       select(elemento) %>%
       rename(Elemento = elemento) %>%
       group_by(Elemento) %>%
-      summarise(suma = n()) %>%
-      filter(suma > 10)
+      summarise(suma = n())
     
    
-    ggplot(elementos, aes(x = reorder(Elemento, -suma),y = suma)) +
-      geom_col(colour = "#bc4b51", fill = "#bc4b51",width = 0.5) +
+      ggplot(elementos, aes(x = reorder(Elemento, -suma),y = suma)) +
+      geom_col(colour = "#335c67", fill = "#335c67",width = 0.5) +
       geom_text(aes(label = suma), vjust = 1.2, colour = "White") +
       ggtitle("Principales elementos dañados") +
       theme(plot.title = element_text(hjust = 0.5),
@@ -255,6 +260,7 @@ server <- function(input, output, session) {
       ) +
       xlab("Elementos") +
       ylab("Cantidad")
+    
   })  
   
 }
