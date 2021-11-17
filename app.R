@@ -162,7 +162,7 @@ server <- function(input, output, session) {
     return(danos_filtrado)
   })
   
-  # Mapa ubicación de daños
+  # Mapa ubicación de los daños
   
   output$mapa <- renderLeaflet({
     registros <- filtrarDanos()
@@ -206,6 +206,15 @@ server <- function(input, output, session) {
           "Tipo: ", registros$tipo,
           ", ",
           "Severidad: ", registros$severidad
+        ),
+        popup = paste0(
+          "<strong>Estructura: </strong>", registros$estructura,
+          "<br>",
+          "<strong>Elemento: </strong>", registros$elemento,
+          "<br>",
+          "<strong>Tipo de daño: </strong>", registros$tipo,
+          "<br>",
+          "<strong>Severidad: </strong>", registros$severidad
         )
       )  %>%
       addLayersControl(
@@ -248,7 +257,8 @@ server <- function(input, output, session) {
       select(elemento) %>%
       rename(Elemento = elemento) %>%
       group_by(Elemento) %>%
-      summarise(suma = n())
+      summarise(suma = n()) %>%
+      filter(suma > 10)
     
    
       ggplot(elementos, aes(x = reorder(Elemento, -suma),y = suma)) +

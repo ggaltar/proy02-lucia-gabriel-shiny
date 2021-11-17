@@ -5,9 +5,9 @@ account: 2tm7pq-gabriel-corrales
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5086287
-bundleId: 5234637
+bundleId: 5264388
 url: https://gabriel-corrales.shinyapps.io/tarea03-lucia-gabriel-shiny/
-when: 1636515642.04485
-lastSyncTime: 1636515642.04485
+when: 1637192392.44879
+lastSyncTime: 1637192392.44879
 asMultiple: FALSE
 asStatic: FALSE
